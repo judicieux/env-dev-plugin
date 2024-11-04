@@ -6,15 +6,15 @@ import (
         "strings"
 )
 
-type EnvDevHttpPlugin.go.go struct {
+type EnvDevHttpPlugin struct {
         l9format.ServicePluginBase
 }
 
-func (EnvDevHttpPlugin.go) GetVersion() (int, int, int) {
+func (EnvDevHttpPlugin) GetVersion() (int, int, int) {
         return 0, 0, 2
 }
 
-func (EnvDevHttpPlugin.go) GetRequests() []l9format.WebPluginRequest {
+func (EnvDevHttpPlugin) GetRequests() []l9format.WebPluginRequest {
         return []l9format.WebPluginRequest{{
                 Method:  "GET",
                 Path:    "/.env.dev",
@@ -23,15 +23,15 @@ func (EnvDevHttpPlugin.go) GetRequests() []l9format.WebPluginRequest {
         }}
 }
 
-func (EnvDevHttpPlugin.go) GetName() string {
-        return "EnvDevHttpPlugin.go"
+func (EnvDevHttpPlugin) GetName() string {
+        return "EnvDevHttpPlugin"
 }
 
-func (EnvDevHttpPlugin.go) GetStage() string {
+func (EnvDevHttpPlugin) GetStage() string {
         return "open"
 }
 
-func (plugin EnvDevHttpPlugin.go) Verify(request l9format.WebPluginRequest, response l9format.WebPluginResponse, event *l9format.L9Event, options map[string]string) (hasLeak bool) {
+func (plugin EnvDevHttpPlugin) Verify(request l9format.WebPluginRequest, response l9format.WebPluginResponse, event *l9format.L9Event, options map[string]string) (hasLeak bool) {
         if !request.EqualAny(plugin.GetRequests()) || response.Response.StatusCode != 200 {
                 return false
         }
@@ -48,7 +48,7 @@ func (plugin EnvDevHttpPlugin.go) Verify(request l9format.WebPluginRequest, resp
                 event.Leak.Type = "config_leak"
                 event.Leak.Severity = "high"
                 event.AddTag("potential-leak")
-                event.Summary = "Found sensitive information in /.env.example:\n" + string(response.Body)
+                event.Summary = "Found sensitive information in /.env.dev:\n" + string(response.Body)
                 return true
         }
 
